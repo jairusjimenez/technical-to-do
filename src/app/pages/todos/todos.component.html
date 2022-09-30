@@ -1,0 +1,48 @@
+<div class="table-wrapper">
+    <!-- <h1>To Do List</h1> -->
+    <h2>{{isEditMode ? 'Edit To-Do' : 'Add new To-Do'}}</h2>
+
+    <form (submit)="onSubmit()" #todoForm="ngForm">
+
+        <mat-form-field>
+            <input matInput placeholder="Description" name="description" required [(ngModel)]="todoData.description">
+        </mat-form-field>
+    
+        <ng-container *ngIf="isEditMode; else elseTemplate">
+            <button mat-button color="primary">Update</button>
+            <a mat-button color="warn" (click)="cancelEdit()">Cancel</a>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <button mat-button color="primary">Add</button>
+        </ng-template>
+    
+    </form>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef> Description </th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+                <a href="javascript:void(0)" (click)="editTodo(element)">Edit</a> |
+                <a href="javascript:void(0)" (click)="deleteTodo(element.id)">Delete</a>
+            </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            [ngClass]="{'editable-row': todoData.id === row.id}"></tr>
+    </table>
+
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+</div>
+
